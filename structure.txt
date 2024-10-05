@@ -1,0 +1,29 @@
+lib/
+│
+├── core/
+│   └── utils/
+│       └── constants.dart   // Constantes, como nombres de planetas, rutas, etc.
+│
+├── data/
+│   ├── models/
+│   │   └── planet.dart      // Modelos de datos, como el modelo Planet
+│   └── repository/
+│       └── planet_repository.dart  // Repositorio para la obtención de datos de planetas
+│
+├── domain/
+│   ├── models/
+│   │   └── planet_entity.dart  // Entidades que representan la información básica de los planetas
+│   └── usecases/
+│       └── fetch_planets_usecase.dart  // Casos de uso para obtener la lista de planetas
+│
+├── presentation/
+│   ├── pages/
+│   │   ├── welcome_page.dart     // Pantalla de bienvenida
+│   │   ├── orrery_page.dart      // Pantalla que muestra el orrery (con Provider para manejar los datos)
+│   │   └── planet_detail_page.dart  // Pantalla de detalles de cada planeta
+│   ├── providers/
+│   │   ├── planet_provider.dart  // Provider que maneja el estado de los planetas
+│   └── widgets/
+│       └── planet_card.dart      // Widget reutilizable para mostrar los planetas en la pantalla
+│
+└── main.dart  // Punto de entrada de la aplicación

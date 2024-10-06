@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:web_orrery/ui/pages/planet_detail/planet_detail_page.dart';
-import 'package:web_orrery/ui/pages/planet_viewer/planer_viewer_page.dart';
+import 'package:web_orrery/ui/pages/planet_viewer/planet_viewer_page.dart';
 import 'package:web_orrery/ui/pages/start_page/start_page.dart';
 import 'package:web_orrery/ui/theme/theme.dart';
 

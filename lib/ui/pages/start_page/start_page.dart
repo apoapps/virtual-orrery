@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:web_orrery/ui/widgets/action_button_1.dart';
 import 'package:web_orrery/ui/widgets/planet_viewer_3d.dart';
+import 'package:web_orrery/ui/widgets/starry_background.dart';
 
 class StartPage extends StatelessWidget {
   const StartPage({super.key});
@@ -12,6 +13,7 @@ class StartPage extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
+          const StarryBackground(),
           const Positioned(
             left: 32,
             top: 0,

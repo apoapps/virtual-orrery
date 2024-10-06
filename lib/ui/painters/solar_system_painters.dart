@@ -24,25 +24,39 @@ class SolarSystemPainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height / 2);
     final sunPaint = Paint()..color = Colors.yellow;
 
-    canvas.drawCircle(center, 30, sunPaint); // Sol
+    // Dibujar el sol en el centro
+    canvas.drawCircle(center, 30, sunPaint);
 
+    // Multiplicador de velocidad ajustable
+    const speedMultiplier =
+        400.0; // Puedes ajustar este valor para cambiar la velocidad
+
+    // Dibujar cada planeta
     for (final planet in planets) {
       final orbitRadius = planet.orbitRadius;
       final radius = planet.radius;
 
-      // Velocidad ajustada por el período orbital real
-      final angle = animationValue * (2 * pi / planet.orbitalPeriod);
+      // Calcular la velocidad angular ajustada
+      final omega = speedMultiplier * (2 * pi) / planet.orbitalPeriod;
 
-      final planetX = center.dx + orbitRadius * cos(angle);
-      final planetY = center.dy + orbitRadius * sin(angle);
+      // Calcular el ángulo basado en la velocidad angular
+      final angle = animationValue * omega;
+
+      // Asegurar que el ángulo esté entre 0 y 2π
+      final normalizedAngle = angle % (2 * pi);
+
+      // Posición del planeta en su órbita
+      final planetX = center.dx + orbitRadius * cos(normalizedAngle);
+      final planetY = center.dy + orbitRadius * sin(normalizedAngle);
       final planetPosition = Offset(planetX, planetY);
 
+      // Dibujar la órbita
       final orbitPaint = Paint()
         ..color = Colors.white.withOpacity(0.3)
         ..style = PaintingStyle.stroke;
+      canvas.drawCircle(center, orbitRadius, orbitPaint);
 
-      canvas.drawCircle(center, orbitRadius, orbitPaint); // Órbita
-
+      // Dibujar el planeta
       final planetPaint = Paint()..color = planet.color;
       canvas.drawCircle(planetPosition, radius, planetPaint);
 
@@ -60,7 +74,7 @@ class SolarSystemPainter extends CustomPainter {
       // Detectar si se hizo clic en el planeta
       if (touchPosition != null && !planetSelected) {
         if ((touchPosition! - planetPosition).distance < radius) {
-          handleSelection(planet); // Selecciona el planeta si se toca
+          handleSelection(planet); // Seleccionar el planeta si se toca
         }
       }
     }

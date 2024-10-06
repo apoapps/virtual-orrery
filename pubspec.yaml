@@ -28,3 +28,4 @@ flutter:
 
   assets:
     - assets/3d/planets/
+    - assets/2d/planets/

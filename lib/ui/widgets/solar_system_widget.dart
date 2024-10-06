@@ -1,11 +1,19 @@
+// solar_system_widget.dart
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:web_orrery/models/planet.dart';
+import 'package:flutter/services.dart';
 import 'package:web_orrery/ui/painters/solar_system_painters.dart';
 
 class SolarSystemWidget extends StatefulWidget {
   final Function(Planet) onPlanetSelected;
+  final List<Planet> planets;
 
-  const SolarSystemWidget({super.key, required this.onPlanetSelected});
+  const SolarSystemWidget({
+    super.key,
+    required this.onPlanetSelected,
+    required this.planets,
+  });
 
   @override
   SolarSystemWidgetState createState() => SolarSystemWidgetState();
@@ -14,9 +22,9 @@ class SolarSystemWidget extends StatefulWidget {
 class SolarSystemWidgetState extends State<SolarSystemWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late List<Planet> _planets;
   Offset? _touchPosition;
   bool _planetSelected = false;
+  Map<Planet, ui.Image> planetImages = {};
 
   @override
   void initState() {
@@ -26,96 +34,25 @@ class SolarSystemWidgetState extends State<SolarSystemWidget>
       duration: const Duration(seconds: 60),
     )..repeat();
 
-    _planets = [
-      Planet(
-        name: 'Mercury',
-        type: 'Planet',
-        radius: 5.0,
-        orbitRadius: 60.0,
-        volume: 6.083e10,
-        density: 5.43,
-        mass: 3.30e23,
-        orbitalPeriod: 88,
-        color: Colors.grey,
-      ),
-      Planet(
-        name: 'Venus',
-        type: 'Planet',
-        radius: 10.0,
-        orbitRadius: 90.0,
-        volume: 9.28e11,
-        density: 5.24,
-        mass: 4.87e24,
-        orbitalPeriod: 224.7,
-        color: Colors.orangeAccent,
-      ),
-      Planet(
-        name: 'Earth',
-        type: 'Planet',
-        radius: 15.0,
-        orbitRadius: 120.0,
-        volume: 1.08321e12,
-        density: 5.52,
-        mass: 5.97e24,
-        orbitalPeriod: 365,
-        color: Colors.blue,
-      ),
-      Planet(
-        name: 'Mars',
-        type: 'Planet',
-        radius: 12.0,
-        orbitRadius: 150.0,
-        volume: 1.63e11,
-        density: 3.93,
-        mass: 6.39e23,
-        orbitalPeriod: 687,
-        color: Colors.red,
-      ),
-      Planet(
-        name: 'Jupiter',
-        type: 'Planet',
-        radius: 25.0,
-        orbitRadius: 200.0,
-        volume: 1.431e15,
-        density: 1.33,
-        mass: 1.90e27,
-        orbitalPeriod: 4333,
-        color: Colors.brown,
-      ),
-      Planet(
-        name: 'Saturn',
-        type: 'Planet',
-        radius: 22.0,
-        orbitRadius: 240.0,
-        volume: 8.27e14,
-        density: 0.687,
-        mass: 5.68e26,
-        orbitalPeriod: 10759,
-        color: Colors.yellow,
-      ),
-      Planet(
-        name: 'Uranus',
-        type: 'Planet',
-        radius: 18.0,
-        orbitRadius: 280.0,
-        volume: 6.83e13,
-        density: 1.27,
-        mass: 8.68e25,
-        orbitalPeriod: 30685,
-        color: Colors.lightBlue,
-      ),
-      Planet(
-        name: 'Neptune',
-        type: 'Planet',
-        radius: 18.0,
-        orbitRadius: 320.0,
-        volume: 6.25e13,
-        density: 1.64,
-        mass: 1.02e26,
-        orbitalPeriod: 60190,
-        color: Colors.blue.shade900,
-      ),
-    ];
+    _loadPlanetImages();
+  }
+
+  void _loadPlanetImages() async {
+    for (final planet in widget.planets) {
+      if (planet.texturePath != null) {
+        final image = await _loadImage(planet.texturePath!);
+        setState(() {
+          planetImages[planet] = image;
+        });
+      }
+    }
+  }
+
+  Future<ui.Image> _loadImage(String asset) async {
+    final data = await rootBundle.load(asset);
+    final codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
+    final frame = await codec.getNextFrame();
+    return frame.image;
   }
 
   void _handlePlanetSelection(Planet planet) {
@@ -139,7 +76,7 @@ class SolarSystemWidgetState extends State<SolarSystemWidget>
       onTapDown: (details) {
         setState(() {
           _touchPosition = details.localPosition;
-          _planetSelected = false; // Restablecer para permitir nueva selección
+          _planetSelected = false;
         });
       },
       child: AnimatedBuilder(
@@ -147,12 +84,13 @@ class SolarSystemWidgetState extends State<SolarSystemWidget>
         builder: (context, child) {
           return CustomPaint(
             painter: SolarSystemPainter(
-              _planets,
+              widget.planets,
               _controller.value,
               widget.onPlanetSelected,
               _touchPosition,
               _planetSelected,
               _handlePlanetSelection,
+              planetImages,
             ),
             child: Container(),
           );

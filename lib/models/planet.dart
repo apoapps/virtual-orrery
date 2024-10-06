@@ -1,3 +1,4 @@
+// planet.dart
 import 'dart:ui';
 
 class Planet {
@@ -11,6 +12,7 @@ class Planet {
   double angle = 0.0;
   double orbitalPeriod;
   Color color;
+  String? texturePath;
 
   Planet({
     required this.name,
@@ -22,5 +24,6 @@ class Planet {
     required this.mass,
     required this.orbitalPeriod,
     required this.color,
+    this.texturePath,
   });
 }

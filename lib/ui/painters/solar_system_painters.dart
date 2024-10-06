@@ -1,4 +1,6 @@
+// solar_system_painter.dart
 import 'dart:math';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:web_orrery/models/planet.dart';
 
@@ -9,6 +11,7 @@ class SolarSystemPainter extends CustomPainter {
   final Offset? touchPosition;
   final bool planetSelected;
   final Function(Planet) handleSelection;
+  final Map<Planet, ui.Image> planetImages;
 
   SolarSystemPainter(
     this.planets,
@@ -17,6 +20,7 @@ class SolarSystemPainter extends CustomPainter {
     this.touchPosition,
     this.planetSelected,
     this.handleSelection,
+    this.planetImages,
   );
 
   @override
@@ -44,8 +48,20 @@ class SolarSystemPainter extends CustomPainter {
         ..style = PaintingStyle.stroke;
       canvas.drawCircle(center, orbitRadius, orbitPaint);
 
-      final planetPaint = Paint()..color = planet.color;
-      canvas.drawCircle(planetPosition, radius, planetPaint);
+      if (planetImages.containsKey(planet)) {
+        final image = planetImages[planet]!;
+        final srcRect = Rect.fromLTWH(
+            0, 0, image.width.toDouble(), image.height.toDouble());
+        final dstRect = Rect.fromCenter(
+          center: planetPosition,
+          width: radius * 2,
+          height: radius * 2,
+        );
+        canvas.drawImageRect(image, srcRect, dstRect, Paint());
+      } else {
+        final planetPaint = Paint()..color = planet.color;
+        canvas.drawCircle(planetPosition, radius, planetPaint);
+      }
 
       final textPainter = TextPainter(
         text: TextSpan(

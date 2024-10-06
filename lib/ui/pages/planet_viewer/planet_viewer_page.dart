@@ -18,6 +18,8 @@ class PlanetViewerPage extends StatelessWidget {
           SolarSystemWidget(
             onPlanetSelected: (Planet planet) {
               debugPrint(planet.name);
+              context.pop();
+              context.push("/planet_detail");
             },
           ),
           Positioned(

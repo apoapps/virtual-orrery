@@ -131,7 +131,7 @@ class SolarSystemWidgetState extends State<SolarSystemWidget>
         setState(() {
           _touchPosition = details.localPosition;
           _planetSelected =
-              false; // Reinicia la bandera para permitir nuevas selecciones
+              false; 
         });
       },
       child: AnimatedBuilder(
@@ -146,9 +146,9 @@ class SolarSystemWidgetState extends State<SolarSystemWidget>
               _planetSelected,
               (Planet planet) {
                 if (!_planetSelected) {
-                  widget.onPlanetSelected(planet); // Solo se selecciona una vez
+                  widget.onPlanetSelected(planet);
                   _planetSelected =
-                      true; // Evitar seleccionar múltiples veces hasta que se toque nuevamente
+                      true; 
                 }
               },
             ),

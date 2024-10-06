@@ -123,7 +123,6 @@ class SolarSystemWidgetState extends State<SolarSystemWidget>
       setState(() {
         _planetSelected = true;
       });
-      //   _controller.stop(); // Pausar las animaciones
       widget.onPlanetSelected(planet);
     });
   }
@@ -140,6 +139,7 @@ class SolarSystemWidgetState extends State<SolarSystemWidget>
       onTapDown: (details) {
         setState(() {
           _touchPosition = details.localPosition;
+          _planetSelected = false; // Restablecer para permitir nueva selección
         });
       },
       child: AnimatedBuilder(

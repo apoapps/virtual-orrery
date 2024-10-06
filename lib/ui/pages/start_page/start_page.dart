@@ -23,7 +23,7 @@ class StartPage extends StatelessWidget {
               width: 600,
               child: PlanetViewer3D(
                 enableZoom: false,
-                modelPath: "assets/3d/planets/Earth3D.glb",
+                modelPath: "assets/3d/planets/Earth.glb",
               ),
             ),
           ),

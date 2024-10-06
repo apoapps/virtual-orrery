@@ -35,7 +35,7 @@ class StartPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    "Web\nOrrery",
+                    "Virtual\nOrrery",
                     style: TextStyle(
                       fontSize: 64,
                     ),

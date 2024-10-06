@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:web_orrery/models/planet.dart';
 import 'package:web_orrery/providers/planet_detail_controller.dart';
+import 'package:web_orrery/ui/widgets/action_button_1.dart';
+import 'package:web_orrery/ui/widgets/planet_viewer_3d.dart';
+import 'package:web_orrery/ui/widgets/starry_background.dart';
 
 class PlanetDetailPage extends StatelessWidget {
   const PlanetDetailPage({super.key});
@@ -11,8 +15,6 @@ class PlanetDetailPage extends StatelessWidget {
     PlanetDetailController planetController =
         Provider.of<PlanetDetailController>(context);
     Planet? planet = planetController.selectedPlanet;
-
-    // If no planet is selected, show an error message
     if (planet == null) {
       return const Scaffold(
         body: Center(
@@ -24,70 +26,83 @@ class PlanetDetailPage extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // Background placeholder for the planet details
-          Positioned(
-            top: 60,
-            left: 16,
-            child: Text(
-              "About ${planet.name}",
-              style: const TextStyle(
-                fontSize: 36,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-          ),
+          const StarryBackground(),
           Center(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Card(
-                elevation: 8,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
+            child: AspectRatio(
+              aspectRatio: 4 / 3,
+              child: SizedBox(
                 child: Row(
                   children: [
-                    // Placeholder for the planet on the left
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: CircleAvatar(
-                        radius: 80,
-                        backgroundColor: planet.color.withOpacity(0.7),
-                        child: Text(
-                          planet.name.substring(0, 1),
-                          style: const TextStyle(
-                            fontSize: 64,
-                            color: Colors.white,
+                    Expanded(
+                      child: Center(
+                        child: PlanetViewer3D(
+                          modelPath: "assets/3d/planets/${planet.name}.glb",
+                          enableZoom: false,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                planet.name,
+                                style: const TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                'Type: ${planet.type}',
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                              Text(
+                                'Volume: ${planet.volume} km³',
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                              Text(
+                                'Density: ${planet.density} g/cm³',
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                              Text(
+                                'Mass: ${planet.mass} kg',
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                              Text(
+                                'Orbit Radius: ${planet.orbitRadius} km',
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                              Text(
+                                'Orbital Period: ${planet.orbitalPeriod} days',
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            ],
                           ),
                         ),
                       ),
                     ),
-                    const SizedBox(width: 24),
-                    // Information about the planet on the right
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            planet.name,
-                            style: const TextStyle(
-                              fontSize: 32,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          Text('Type: ${planet.type}'),
-                          Text('Volume: ${planet.volume} km³'),
-                          Text('Density: ${planet.density} g/cm³'),
-                          Text('Mass: ${planet.mass} kg'),
-                          Text('Orbit Radius: ${planet.orbitRadius} km'),
-                          Text('Orbital Period: ${planet.orbitalPeriod} days'),
-                        ],
-                      ),
-                    ),
                   ],
                 ),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 32,
+            right: 32,
+            child: SizedBox(
+              width: 100,
+              height: 100,
+              child: ActionButton1(
+                text: '<--',
+                onPressed: () {
+                  context.pop('/');
+                },
               ),
             ),
           ),

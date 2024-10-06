@@ -30,7 +30,7 @@ class SolarSystemPainter extends CustomPainter {
 
     canvas.drawCircle(center, 30, sunPaint);
 
-    const speedMultiplier = 400.0;
+    const speedMultiplier = 20000.0;
 
     for (final planet in planets) {
       final orbitRadius = planet.orbitRadius;

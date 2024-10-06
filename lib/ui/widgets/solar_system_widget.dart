@@ -31,7 +31,7 @@ class SolarSystemWidgetState extends State<SolarSystemWidget>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 60),
+      duration: const Duration(minutes: 60),
     )..repeat();
 
     _loadPlanetImages();

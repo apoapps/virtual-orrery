@@ -39,7 +39,7 @@ class SolarSystemWidgetState extends State<SolarSystemWidget>
 
   void _loadPlanetImages() async {
     for (final planet in widget.planets) {
-      if (planet.texturePath != null) {
+      if (planet.texturePath != null && planet.texturePath!.isNotEmpty) {
         final image = await _loadImage(planet.texturePath!);
         setState(() {
           planetImages[planet] = image;

@@ -33,6 +33,30 @@ class SolarSystemPainter extends CustomPainter {
     const speedMultiplier = 20000.0;
 
     for (final planet in planets) {
+      if (planet.type == 'asteroid') {
+        final orbitRadius = planet.orbitRadius;
+        const numAsteroids = 100;
+        final random = Random();
+
+        for (int i = 0; i < numAsteroids; i++) {
+          final angle = 2 * pi * i / numAsteroids + random.nextDouble() * 0.1;
+          final distanceFromCenter = orbitRadius + random.nextDouble() * 10 - 5;
+          final asteroidX = center.dx + distanceFromCenter * cos(angle);
+          final asteroidY = center.dy + distanceFromCenter * sin(angle);
+          final asteroidPosition = Offset(asteroidX, asteroidY);
+
+          final asteroidPaint = Paint()..color = Colors.grey;
+          canvas.drawCircle(asteroidPosition, 1.0, asteroidPaint);
+        }
+
+        final orbitPaint = Paint()
+          ..color = Colors.white.withOpacity(0.1)
+          ..style = PaintingStyle.stroke;
+        canvas.drawCircle(center, orbitRadius, orbitPaint);
+
+        continue;
+      }
+
       final orbitRadius = planet.orbitRadius;
       final radius = planet.radius;
       final omega = speedMultiplier * (2 * pi) / planet.orbitalPeriod;

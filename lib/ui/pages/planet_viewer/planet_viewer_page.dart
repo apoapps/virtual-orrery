@@ -63,6 +63,18 @@ class PlanetViewerPage extends StatelessWidget {
         texturePath: 'assets/2d/planets/mars.png',
       ),
       Planet(
+        name: 'Asteroid Belt',
+        type: 'asteroid',
+        radius: 0.0,
+        orbitRadius: 175.0,
+        volume: 0.0,
+        density: 0.0,
+        mass: 0.0,
+        orbitalPeriod: 0.0,
+        color: Colors.grey,
+        texturePath: '',
+      ),
+      Planet(
         name: 'Jupiter',
         type: 'Planet',
         radius: 25.0,
@@ -119,10 +131,11 @@ class PlanetViewerPage extends StatelessWidget {
           SolarSystemWidget(
             planets: planets,
             onPlanetSelected: (Planet newPlanet) {
-              Provider.of<PlanetDetailController>(context, listen: false)
-                  .setPlanet(newPlanet);
-
-              context.push("/planet_detail");
+              if (newPlanet.type != 'asteroid') {
+                Provider.of<PlanetDetailController>(context, listen: false)
+                    .setPlanet(newPlanet);
+                context.push("/planet_detail");
+              }
             },
           ),
           Positioned(

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:web_orrery/models/planet.dart';
+import 'package:web_orrery/providers/planet_detail_controller.dart';
 import 'package:web_orrery/ui/widgets/action_button_1.dart';
 import 'package:web_orrery/ui/widgets/solar_system_widget.dart';
 import 'package:web_orrery/ui/widgets/starry_background.dart';
@@ -17,9 +19,20 @@ class PlanetViewerPage extends StatelessWidget {
           const StarryBackground(),
           SolarSystemWidget(
             onPlanetSelected: (Planet planet) {
-              debugPrint(planet.name);
-              context.pop();
-              context.push("/planet_detail");
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                final PlanetDetailController planetDetailController =
+                    Provider.of<PlanetDetailController>(
+                  context,
+                  listen: false,
+                );
+
+                debugPrint(planet.name);
+
+                planetDetailController.setPlanet(planet);
+                context.push("/planet_detail");
+              });
+
+              //   context.pop();
             },
           ),
           Positioned(

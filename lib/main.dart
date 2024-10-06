@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:web_orrery/providers/planet_detail_controller.dart';
 import 'package:web_orrery/ui/pages/planet_detail/planet_detail_page.dart';
 import 'package:web_orrery/ui/pages/planet_viewer/planet_viewer_page.dart';
 import 'package:web_orrery/ui/pages/start_page/start_page.dart';
@@ -16,10 +18,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      theme: AppTheme.darkTheme,
-      routerConfig: _router,
-      debugShowCheckedModeBanner: false,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => PlanetDetailController(),
+        )
+      ],
+      child: MaterialApp.router(
+        theme: AppTheme.darkTheme,
+        routerConfig: _router,
+        debugShowCheckedModeBanner: false,
+      ),
     );
   }
 }

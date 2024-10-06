@@ -16,7 +16,7 @@ class SolarSystemWidgetState extends State<SolarSystemWidget>
   late AnimationController _controller;
   late List<Planet> _planets;
   Offset? _touchPosition;
-  bool _planetSelected = false; // Bandera para evitar múltiples selecciones
+  bool _planetSelected = false;
 
   @override
   void initState() {
@@ -118,6 +118,16 @@ class SolarSystemWidgetState extends State<SolarSystemWidget>
     ];
   }
 
+  void _handlePlanetSelection(Planet planet) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        _planetSelected = true;
+      });
+      //   _controller.stop(); // Pausar las animaciones
+      widget.onPlanetSelected(planet);
+    });
+  }
+
   @override
   void dispose() {
     _controller.dispose();
@@ -130,8 +140,6 @@ class SolarSystemWidgetState extends State<SolarSystemWidget>
       onTapDown: (details) {
         setState(() {
           _touchPosition = details.localPosition;
-          _planetSelected =
-              false; 
         });
       },
       child: AnimatedBuilder(
@@ -144,13 +152,7 @@ class SolarSystemWidgetState extends State<SolarSystemWidget>
               widget.onPlanetSelected,
               _touchPosition,
               _planetSelected,
-              (Planet planet) {
-                if (!_planetSelected) {
-                  widget.onPlanetSelected(planet);
-                  _planetSelected =
-                      true; 
-                }
-              },
+              _handlePlanetSelection,
             ),
             child: Container(),
           );

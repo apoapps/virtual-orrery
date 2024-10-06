@@ -12,6 +12,7 @@ class SolarSystemPainter extends CustomPainter {
   final bool planetSelected;
   final Function(Planet) handleSelection;
   final Map<Planet, ui.Image> planetImages;
+  final List<Offset> asteroidPositions;
 
   SolarSystemPainter(
     this.planets,
@@ -20,14 +21,14 @@ class SolarSystemPainter extends CustomPainter {
     this.touchPosition,
     this.planetSelected,
     this.handleSelection,
-    this.planetImages,
-  );
+    this.planetImages, {
+    required this.asteroidPositions,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final sunPaint = Paint()..color = Colors.yellow;
-
     canvas.drawCircle(center, 30, sunPaint);
 
     const speedMultiplier = 20000.0;
@@ -35,25 +36,15 @@ class SolarSystemPainter extends CustomPainter {
     for (final planet in planets) {
       if (planet.type == 'asteroid') {
         final orbitRadius = planet.orbitRadius;
-        const numAsteroids = 100;
-        final random = Random();
-
-        for (int i = 0; i < numAsteroids; i++) {
-          final angle = 2 * pi * i / numAsteroids + random.nextDouble() * 0.1;
-          final distanceFromCenter = orbitRadius + random.nextDouble() * 10 - 5;
-          final asteroidX = center.dx + distanceFromCenter * cos(angle);
-          final asteroidY = center.dy + distanceFromCenter * sin(angle);
-          final asteroidPosition = Offset(asteroidX, asteroidY);
-
-          final asteroidPaint = Paint()..color = Colors.grey;
+        final asteroidPaint = Paint()..color = Colors.grey;
+        for (final offset in asteroidPositions) {
+          final asteroidPosition = center + offset;
           canvas.drawCircle(asteroidPosition, 1.0, asteroidPaint);
         }
-
         final orbitPaint = Paint()
           ..color = Colors.white.withOpacity(0.1)
           ..style = PaintingStyle.stroke;
         canvas.drawCircle(center, orbitRadius, orbitPaint);
-
         continue;
       }
 
@@ -62,11 +53,9 @@ class SolarSystemPainter extends CustomPainter {
       final omega = speedMultiplier * (2 * pi) / planet.orbitalPeriod;
       final angle = animationValue * omega;
       final normalizedAngle = angle % (2 * pi);
-
       final planetX = center.dx + orbitRadius * cos(normalizedAngle);
       final planetY = center.dy + orbitRadius * sin(normalizedAngle);
       final planetPosition = Offset(planetX, planetY);
-
       final orbitPaint = Paint()
         ..color = Colors.white.withOpacity(0.3)
         ..style = PaintingStyle.stroke;
@@ -97,8 +86,9 @@ class SolarSystemPainter extends CustomPainter {
       textPainter.layout();
       textPainter.paint(canvas, planetPosition + Offset(-10, -radius - 10));
 
-      if (touchPosition != null && !planetSelected) {
-        if ((touchPosition! - planetPosition).distance < radius) {
+      final touchPos = touchPosition;
+      if (touchPos != null && !planetSelected) {
+        if ((touchPos - planetPosition).distance < radius) {
           handleSelection(planet);
         }
       }

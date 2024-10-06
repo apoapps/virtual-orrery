@@ -3,6 +3,8 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:web_orrery/models/planet.dart';
 import 'package:flutter/services.dart';
+import 'dart:math';
+
 import 'package:web_orrery/ui/painters/solar_system_painters.dart';
 
 class SolarSystemWidget extends StatefulWidget {
@@ -25,6 +27,7 @@ class SolarSystemWidgetState extends State<SolarSystemWidget>
   Offset? _touchPosition;
   bool _planetSelected = false;
   Map<Planet, ui.Image> planetImages = {};
+  List<Offset> asteroidPositions = [];
 
   @override
   void initState() {
@@ -33,8 +36,8 @@ class SolarSystemWidgetState extends State<SolarSystemWidget>
       vsync: this,
       duration: const Duration(minutes: 60),
     )..repeat();
-
     _loadPlanetImages();
+    _generateAsteroidPositions();
   }
 
   void _loadPlanetImages() async {
@@ -53,6 +56,24 @@ class SolarSystemWidgetState extends State<SolarSystemWidget>
     final codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
     final frame = await codec.getNextFrame();
     return frame.image;
+  }
+
+  void _generateAsteroidPositions() {
+    for (final planet in widget.planets) {
+      if (planet.type == 'asteroid') {
+        final orbitRadius = planet.orbitRadius;
+        const numAsteroids = 100;
+        final random = Random();
+        for (int i = 0; i < numAsteroids; i++) {
+          final angle = 2 * pi * i / numAsteroids + random.nextDouble() * 0.1;
+          final distanceFromCenter = orbitRadius + random.nextDouble() * 10 - 5;
+          final asteroidX = distanceFromCenter * cos(angle);
+          final asteroidY = distanceFromCenter * sin(angle);
+          final asteroidPosition = Offset(asteroidX, asteroidY);
+          asteroidPositions.add(asteroidPosition);
+        }
+      }
+    }
   }
 
   void _handlePlanetSelection(Planet planet) {
@@ -91,6 +112,7 @@ class SolarSystemWidgetState extends State<SolarSystemWidget>
               _planetSelected,
               _handlePlanetSelection,
               planetImages,
+              asteroidPositions: asteroidPositions,
             ),
             child: Container(),
           );

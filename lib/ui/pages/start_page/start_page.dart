@@ -47,7 +47,7 @@ class StartPage extends StatelessWidget {
                     height: 100,
                     width: 200,
                     child: ActionButton1(
-                      text: 'Press here to start exploring!',
+                      text: 'Press to start exploring!',
                       onPressed: () {
                         context.push('/planet_viewer');
                       },
